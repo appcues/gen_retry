@@ -1,6 +1,6 @@
 # GenRetry
 
-GenRetry is a module for retrying Elixir functions,
+GenRetry provides utilities for retrying Elixir functions,
 with configurable delay and backoff characteristics.
 
 
@@ -22,7 +22,7 @@ with configurable delay and backoff characteristics.
 ## [Full Documentation](http://hexdocs.pm/gen_retry/gen_retry.html)
 
 [Full gen_retry documentation is available on
-Hexdocs.pm.](http://hexdocs.pm/gen_retry/gen_retry.html)
+Hexdocs.pm.](http://hexdocs.pm/gen_retry/GenRetry.html)
 
 
 ## Authorship and License
