@@ -18,15 +18,15 @@ my_future_function = fn ->
   {:ok, val} = get_val_from_flaky_network_service()
   val
 end
-t = GenRetry.task(my_future_function, retries: 3)
+t = GenRetry.Task.async(my_future_function, retries: 3)
 my_val = Task.await(t)  # may raise exception
 ```
 
 
-## [Full Documentation](http://hexdocs.pm/gen_retry/0.2.0/GenRetry.html)
+## [Full Documentation](http://hexdocs.pm/gen_retry/GenRetry.html)
 
 [Full gen_retry documentation is available on
-Hexdocs.pm.](http://hexdocs.pm/gen_retry/0.2.0/GenRetry.html)
+Hexdocs.pm.](http://hexdocs.pm/gen_retry/GenRetry.html)
 
 
 ## Authorship and License

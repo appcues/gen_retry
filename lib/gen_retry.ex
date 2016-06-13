@@ -3,6 +3,8 @@ defmodule GenRetry do
   GenRetry provides utilities for retrying Elixir functions,
   with configurable delay and backoff characteristics.
 
+  ## Summary
+
   Given a function which raises an exception upon failure, `retry/2`
   and `retry_link/2` repeatedly executes the function until success is
   reached or the maximum number of retries has occurred.
@@ -12,6 +14,20 @@ defmodule GenRetry do
   `Task.Supervisor.async/2`, respectively, adding retry capability.
   They return plain `%Task{}` structs, usable with any other function in
   the `Task` module.
+
+  ## Examples
+
+      my_background_function = fn ->
+        :ok = try_to_send_tps_reports()
+      end
+      GenRetry.retry(my_background_function, retries: 10, delay: 10_000)
+
+      my_future_function = fn ->
+        {:ok, val} = get_val_from_flaky_network_service()
+        val
+      end
+      t = GenRetry.Task.async(my_future_function, retries: 3)
+      my_val = Task.await(t)  # may raise exception
 
   ## Options
 
