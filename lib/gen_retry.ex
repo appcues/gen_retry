@@ -91,7 +91,7 @@ defmodule GenRetry do
 
   @doc ~S"""
   Starts a retryable process linked to `GenRetry.Supervisor`, and returns its
-  pid.  `func` should be a function that raises an exception upon failure;
+  pid.  `fun` should be a function that raises an exception upon failure;
   any other return value is treated as success.
   """
   @spec retry(fun, options) :: pid
@@ -102,7 +102,7 @@ defmodule GenRetry do
 
   @doc ~S"""
   Starts a retryable process linked to the current process, and returns its
-  pid.  `func` should be a function that raises an exception upon failure;
+  pid.  `fun` should be a function that raises an exception upon failure;
   any other return value is treated as success.
   """
   @spec retry_link(fun, options) :: pid
