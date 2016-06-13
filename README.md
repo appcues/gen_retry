@@ -23,10 +23,10 @@ my_val = Task.await(t)  # may raise exception
 ```
 
 
-## [Full Documentation](http://hexdocs.pm/gen_retry/GenRetry.html)
+## [Full Documentation](http://hexdocs.pm/gen_retry/0.2.0/GenRetry.html)
 
 [Full gen_retry documentation is available on
-Hexdocs.pm.](http://hexdocs.pm/gen_retry/GenRetry.html)
+Hexdocs.pm.](http://hexdocs.pm/gen_retry/0.2.0/GenRetry.html)
 
 
 ## Authorship and License
