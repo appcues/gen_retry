@@ -7,8 +7,9 @@ defmodule GenRetry do
   and `retry_link/2` repeatedly executes the function until success is
   reached or the maximum number of retries has occurred.
 
-  `task/2` is a replacement for `Task.async/1` with retry capability;
-  `task/3` is a similar replacement for `Task.Supervisor.async`.
+  `GenRetry.Task.async/2` and `GenRetry.Task.Supervisor.async/3`
+  provide drop-in replacements for `Task.async/1` and
+  `Task.Supervisor.async/2`, respectively, adding retry capability.
   They return plain `%Task{}` structs, usable with any other function in
   the `Task` module.
 
@@ -32,7 +33,7 @@ defmodule GenRetry do
     The base to use for exponentiation during exponential backoff.
     Set to `1` to disable backoff.  Values less than 1 are not very useful.
 
-  * `:respond_to`, pid (ignored by `task/2`):
+  * `:respond_to`, pid (ignored by `GenRetry.Task.*`):
     The process ID to which a message should be sent upon completion.
     Successful exits send `{:success, return_value, final_retry_state}`;
     unsuccessful exits send `{:failure, error, stacktrace, final_retry_state}`.
@@ -92,49 +93,6 @@ defmodule GenRetry do
   def retry_link(fun, opts \\ []) do
     {:ok, pid} = GenServer.start_link(GenRetry.Worker, {fun, Options.new(opts)}, timeout: :infinity)
     pid
-  end
-
-
-  @doc ~S"""
-  Works like `Task.async`, but with retry.  Returns a regular `%Task{}` usable
-  with the rest of the functions in `Task`.
-
-  The `:respond_to` option is tolerated, but ignored.
-  """
-  @spec task(fun) :: %Task{}
-  @spec task(fun, options) :: %Task{}
-
-  def task(fun), do: task(fun, [])
-
-  def task(fun, opts) when is_function(fun) do
-    Task.async(task_function(fun, opts))
-  end
-
-
-  @doc ~S"""
-  Works like `Task.Supervisor.async`, but with retry.  Returns a regular
-  `%Task{}` usable with the rest of the functions in `Task`.
-
-  The `:respond_to` option is tolerated, but ignored.
-  """
-  @spec task(pid, fun) :: %Task{}
-  @spec task(pid, fun, options) :: %Task{}
-
-  def task(pid, fun) when is_pid(pid), do: task(pid, fun, [])
-
-  def task(pid, fun, opts) do
-    Task.Supervisor.async(pid, task_function(fun, opts))
-  end
-
-
-  defp task_function(fun, opts) do
-    fn ->
-      GenRetry.retry_link(fun, Keyword.put(opts, :respond_to, self))
-      receive do
-        {:success, return_value, _worker_state} -> return_value
-        {:failure, error, trace, _worker_state} -> reraise(error, trace)
-      end
-    end
   end
 
 end

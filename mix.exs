@@ -5,7 +5,7 @@ defmodule GenRetry.Mixfile do
     [app: :gen_retry,
      description: description,
      package: package,
-     version: "0.1.0",
+     version: "0.2.0",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -35,7 +35,7 @@ defmodule GenRetry.Mixfile do
   defp deps do
     [
       {:exconstructor, "~> 1.0"},
-      {:ex_doc, "~> 0.10", only: :dev},
+      {:ex_doc, "~> 0.10.0", only: :dev},
       {:dialyxir, "~> 0.3", only: :dev},
       {:ex_spec, "~> 1.0.0", only: :test},
     ]
