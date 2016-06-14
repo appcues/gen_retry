@@ -1,11 +1,11 @@
 defmodule GenRetry do
-  @moduledoc ~S"""
+  @moduledoc ~s"""
   GenRetry provides utilities for retrying Elixir functions,
   with configurable delay and backoff characteristics.
 
   ## Summary
 
-  Given a function which raises an exception upon failure, `retry/2`
+  Given a 0-arity function which raises an exception upon failure, `retry/2`
   and `retry_link/2` repeatedly executes the function until success is
   reached or the maximum number of retries has occurred.
 
@@ -14,6 +14,7 @@ defmodule GenRetry do
   `Task.Supervisor.async/2`, respectively, adding retry capability.
   They return plain `%Task{}` structs, usable with any other function in
   the `Task` module.
+
 
   ## Examples
 
@@ -28,6 +29,22 @@ defmodule GenRetry do
       end
       t = GenRetry.Task.async(my_future_function, retries: 3)
       my_val = Task.await(t)  # may raise exception
+
+
+  ## Installation
+
+  1. Add GenRetry to your list of dependencies in `mix.exs`:
+
+          def deps do
+            [{:gen_retry, "~> #{GenRetry.Mixfile.project[:version]}"}]
+          end
+
+  2. Ensure GenRetry is started before your application:
+
+          def application do
+            [applications: [:gen_retry]]
+          end
+
 
   ## Options
 
@@ -68,14 +85,49 @@ defmodule GenRetry do
   end
 
 
+  defmodule State do
+    @moduledoc ~S"""
+    Used to represent the state of a GenRetry invocation.
+    This struct is part of the success or failure message to be
+    optionally sent to another process, specified by `opts[:respond_to]`,
+    upon completion.
+
+    * `:function` and `:opts` are the invocation arguments supplied by the user.
+    * `:tries` is the total number of attempts made before sending this message.
+    * `:retry_at` is either the timestamp of the last attempt, or 0
+      (if `opts[:retries] == 0`).
+    """
+
+    defstruct function: nil,  # the function to retry
+              opts: nil,      # %GenRetry.Options{} from caller
+              tries: 0,       # number of tries performed so far
+              retry_at: 0     # :erlang.system_time(:milli_seconds)
+
+    @type t :: %__MODULE__{
+      function: GenRetry.retryable_fun,
+      opts: GenRetry.Options.t,
+      tries: non_neg_integer,
+      retry_at: non_neg_integer
+    }
+  end
+
+
   defmodule Options do
     @moduledoc false
-    @type t :: %__MODULE__{}
     defstruct retries: 1,
               delay: 1000,
               jitter: 0,
               exp_base: 2,
               respond_to: nil
+
+    @type t :: %__MODULE__{
+      retries: :infinity | non_neg_integer,
+      delay: non_neg_integer,
+      jitter: number,
+      exp_base: number,
+      respond_to: pid | nil
+    }
+
     use ExConstructor
   end
 
@@ -88,13 +140,19 @@ defmodule GenRetry do
 
   @type options :: [option]
 
+  @type retryable_fun :: (() -> any | no_return)
+
+  @type success_msg :: {:success, any, GenRetry.State.t}
+
+  @type failure_msg :: {:failure, Exception.t, [:erlang.stack_item], GenRetry.State.t}
+
 
   @doc ~S"""
   Starts a retryable process linked to `GenRetry.Supervisor`, and returns its
   pid.  `fun` should be a function that raises an exception upon failure;
   any other return value is treated as success.
   """
-  @spec retry(fun, options) :: pid
+  @spec retry(retryable_fun, options) :: pid
   def retry(fun, opts \\ []) do
     GenRetry.Launcher.launch(fun, opts)
   end
@@ -105,7 +163,7 @@ defmodule GenRetry do
   pid.  `fun` should be a function that raises an exception upon failure;
   any other return value is treated as success.
   """
-  @spec retry_link(fun, options) :: pid
+  @spec retry_link(retryable_fun, options) :: pid
   def retry_link(fun, opts \\ []) do
     {:ok, pid} = GenServer.start_link(GenRetry.Worker, {fun, Options.new(opts)}, timeout: :infinity)
     pid
