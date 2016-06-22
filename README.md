@@ -2,7 +2,6 @@
 
 [![wercker status](https://app.wercker.com/status/d7a76e79ec3f8c3ffe6f373abfecd9a5/s "wercker status")](https://app.wercker.com/project/bykey/d7a76e79ec3f8c3ffe6f373abfecd9a5)
 [![Hex.pm Version](http://img.shields.io/hexpm/v/gen_retry.svg?style=flat)](https://hex.pm/packages/gen_retry)
-[![Coverage Status](https://coveralls.io/repos/appcues/gen_retry/badge.svg?branch=master&service=github)](https://coveralls.io/github/appcues/gen_retry?branch=master)
 
 GenRetry provides utilities for retrying Elixir functions,
 with configurable delay and backoff characteristics.
