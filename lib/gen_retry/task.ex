@@ -33,6 +33,18 @@ defmodule GenRetry.Task do
     def async(pid, fun, opts \\ []) do
       Task.Supervisor.async(pid, GenRetry.Task.task_function(fun, opts))
     end
+
+    @doc ~S"""
+    Works like `Task.Supervisor.async_nolink/2`, but with retry.  Returns a regular
+    `%Task{}` usable with the rest of the functions in `Task`.
+
+    `opts` are GenRetry options.
+    The `:respond_to` option is tolerated, but ignored.
+    """
+    @spec async_nolink(pid, GenRetry.retryable_fun, GenRetry.options) :: %Task{}
+    def async_nolink(pid, fun, opts \\ []) do
+      Task.Supervisor.async_nolink(pid, GenRetry.Task.task_function(fun, opts))
+    end
   end
 
 
