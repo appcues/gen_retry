@@ -5,7 +5,7 @@ defmodule GenRetry.Mixfile do
     [app: :gen_retry,
      description: description,
      package: package,
-     version: "0.3.0",
+     version: "1.0.0",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,

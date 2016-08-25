@@ -57,10 +57,12 @@ defmodule GenRetry do
     Subsequent retries use this value as a starting point for exponential
     backoff.
 
-  * `:jitter`, number (0.0 to 1.0, default 0):
+  * `:jitter`, number (default 0):
     Proportion of current retry delay to randomly add to delay time.
     For example, given options `delay: 1000, jitter: 0.1`, the first delay
-    will be a random time between 1000 and 1100 milliseconds.
+    will be a random time between 1000 and 1100 milliseconds.  Values
+    under 0 will remove time rather than add it; beware of values under -1,
+    which may result in nonsensical "negative time delays".
 
   * `:exp_base`, number (default 2):
     The base to use for exponentiation during exponential backoff.
