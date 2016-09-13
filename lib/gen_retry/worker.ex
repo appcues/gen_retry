@@ -43,7 +43,7 @@ defmodule GenRetry.Worker do
   @spec delay_time(GenRetry.State.t) :: integer
   defp delay_time(state) do
     base_delay = state.opts.delay * :math.pow(state.opts.exp_base, state.tries)
-    jitter = :random.uniform * base_delay * state.opts.jitter
+    jitter = :rand.uniform * base_delay * state.opts.jitter
     round(base_delay + jitter)
   end
 
