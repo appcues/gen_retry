@@ -7,7 +7,7 @@ defmodule GenRetry.Worker do
 
   @spec init({GenRetry.retryable_fun, GenRetry.Options.t}) :: {:ok, GenRetry.State.t}
   def init({fun, opts}) do
-    GenServer.cast(self, :try)
+    GenServer.cast(self(), :try)
     {:ok, %State{function: fun, opts: opts}}
   end
 
@@ -28,7 +28,7 @@ defmodule GenRetry.Worker do
         trace = System.stacktrace
         if should_try_again(state) do
           retry_at = :erlang.system_time(:milli_seconds) + delay_time(state)
-          GenServer.cast(self, :try)
+          GenServer.cast(self(), :try)
           {:noreply, %{state | retry_at: retry_at}}
         else
           if pid = state.opts.respond_to do
@@ -52,4 +52,3 @@ defmodule GenRetry.Worker do
     (state.opts.retries == :infinity) || (state.opts.retries >= state.tries)
   end
 end
-

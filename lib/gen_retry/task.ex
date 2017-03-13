@@ -52,7 +52,7 @@ defmodule GenRetry.Task do
   @spec task_function(GenRetry.retryable_fun, GenRetry.options) :: fun
   def task_function(fun, opts) do
     fn ->
-      GenRetry.retry_link(fun, Keyword.put(opts, :respond_to, self))
+      GenRetry.retry_link(fun, Keyword.put(opts, :respond_to, self()))
       receive do
         {:success, return_value, _worker_state} -> return_value
         {:failure, error, trace, _worker_state} -> reraise(error, trace)
