@@ -3,15 +3,15 @@ defmodule GenRetry.Mixfile do
 
   def project do
     [app: :gen_retry,
-     description: description,
-     package: package,
+     description: description(),
+     package: package(),
      version: "1.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      test_coverage: [tool: ExCoveralls],
      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
-     deps: deps]
+     deps: deps()]
   end
 
   defp description do
