@@ -52,4 +52,3 @@ defmodule GenRetry.Worker do
     (state.opts.retries == :infinity) || (state.opts.retries >= state.tries)
   end
 end
-
