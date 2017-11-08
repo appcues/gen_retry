@@ -39,6 +39,7 @@ defmodule GenRetry.Mixfile do
       {:exconstructor, "~> 1.0"},
       {:ex_doc, "~> 0.10.0", only: :dev},
       {:dialyxir, "~> 0.3", only: :dev},
+      {:earmark, "> 0.0.0", only: :dev},
       {:ex_spec, github: "appcues/ex_spec", tag: "1.1.0-elixir13", only: :test},
       {:excoveralls, "~> 0.5", only: :test},
     ]
