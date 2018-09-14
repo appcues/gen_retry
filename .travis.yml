@@ -5,7 +5,7 @@ env:
   MIX_ENV: test
 otp_release:
   - '21.0'
-script
+script:
   - mix fformat --check-formatted
   - mix test
 cache:
