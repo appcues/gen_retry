@@ -1,6 +1,6 @@
 # GenRetry
 
-[![wercker status](https://app.wercker.com/status/d7a76e79ec3f8c3ffe6f373abfecd9a5/s "wercker status")](https://app.wercker.com/project/bykey/d7a76e79ec3f8c3ffe6f373abfecd9a5)
+[![Build Status](https://travis-ci.com/appcues/gen_retry.svg?branch=master)](https://travis-ci.com/appcues/gen_retry)
 [![Hex.pm Version](http://img.shields.io/hexpm/v/gen_retry.svg?style=flat)](https://hex.pm/packages/gen_retry)
 
 GenRetry provides utilities for retrying Elixir functions,
