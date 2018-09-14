@@ -36,7 +36,7 @@ defmodule GenRetry do
   1. Add GenRetry to your list of dependencies in `mix.exs`:
 
           def deps do
-            [{:gen_retry, "~> #{GenRetry.Mixfile.project[:version]}"}]
+            [{:gen_retry, "~> #{GenRetry.Mixfile.project()[:version]}"}]
           end
 
   2. Ensure GenRetry is started before your application:
@@ -79,13 +79,14 @@ defmodule GenRetry do
   @doc false
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
+
     children = [
-      worker(GenRetry.Launcher, [[], [name: :gen_retry_launcher]])
+      worker(GenRetry.Launcher, [[], [name: :gen_retry_launcher]]),
     ]
+
     opts = [strategy: :one_for_one, name: GenRetry.Supervisor]
     Supervisor.start_link(children, opts)
   end
-
 
   defmodule State do
     @moduledoc ~S"""
@@ -100,19 +101,22 @@ defmodule GenRetry do
       (if `opts[:retries] == 0`).
     """
 
-    defstruct function: nil,  # the function to retry
-              opts: nil,      # %GenRetry.Options{} from caller
-              tries: 0,       # number of tries performed so far
-              retry_at: 0     # :erlang.system_time(:milli_seconds)
+    # the function to retry
+    defstruct function: nil,
+              # %GenRetry.Options{} from caller
+              opts: nil,
+              # number of tries performed so far
+              tries: 0,
+              # :erlang.system_time(:milli_seconds)
+              retry_at: 0
 
     @type t :: %__MODULE__{
-      function: GenRetry.retryable_fun,
-      opts: GenRetry.Options.t,
-      tries: non_neg_integer,
-      retry_at: non_neg_integer
-    }
+            function: GenRetry.retryable_fun(),
+            opts: GenRetry.Options.t(),
+            tries: non_neg_integer,
+            retry_at: non_neg_integer,
+          }
   end
-
 
   defmodule Options do
     @moduledoc false
@@ -123,31 +127,31 @@ defmodule GenRetry do
               respond_to: nil
 
     @type t :: %__MODULE__{
-      retries: :infinity | non_neg_integer,
-      delay: non_neg_integer,
-      jitter: number,
-      exp_base: number,
-      respond_to: pid | nil
-    }
+            retries: :infinity | non_neg_integer,
+            delay: non_neg_integer,
+            jitter: number,
+            exp_base: number,
+            respond_to: pid | nil,
+          }
 
     use ExConstructor
   end
 
   @type option ::
-          {:retries, :infinity | non_neg_integer} |
-          {:delay, non_neg_integer} |
-          {:jitter, number} |
-          {:exp_base, number} |
-          {:respond_to, pid}
+          {:retries, :infinity | non_neg_integer}
+          | {:delay, non_neg_integer}
+          | {:jitter, number}
+          | {:exp_base, number}
+          | {:respond_to, pid}
 
   @type options :: [option]
 
   @type retryable_fun :: (() -> any | no_return)
 
-  @type success_msg :: {:success, any, GenRetry.State.t}
+  @type success_msg :: {:success, any, GenRetry.State.t()}
 
-  @type failure_msg :: {:failure, Exception.t, [:erlang.stack_item], GenRetry.State.t}
-
+  @type failure_msg ::
+          {:failure, Exception.t(), [:erlang.stack_item()], GenRetry.State.t()}
 
   @doc ~S"""
   Starts a retryable process linked to `GenRetry.Supervisor`, and returns its
@@ -159,7 +163,6 @@ defmodule GenRetry do
     GenRetry.Launcher.launch(fun, opts)
   end
 
-
   @doc ~S"""
   Starts a retryable process linked to the current process, and returns its
   pid.  `fun` should be a function that raises an exception upon failure;
@@ -167,9 +170,13 @@ defmodule GenRetry do
   """
   @spec retry_link(retryable_fun, options) :: pid
   def retry_link(fun, opts \\ []) do
-    {:ok, pid} = GenServer.start_link(GenRetry.Worker, {fun, Options.new(opts)}, timeout: :infinity)
+    {:ok, pid} =
+      GenServer.start_link(
+        GenRetry.Worker,
+        {fun, Options.new(opts)},
+        timeout: :infinity
+      )
+
     pid
   end
-
 end
-
