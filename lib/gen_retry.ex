@@ -108,7 +108,9 @@ defmodule GenRetry do
               # number of tries performed so far
               tries: 0,
               # :erlang.system_time(:milli_seconds)
-              retry_at: 0
+              retry_at: 0,
+              # a function for logging
+              logger: nil
 
     @type t :: %__MODULE__{
             function: GenRetry.retryable_fun(),

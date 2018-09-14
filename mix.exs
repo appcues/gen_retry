@@ -42,7 +42,8 @@ defmodule GenRetry.Mixfile do
 
   defp deps do
     [
-      {:freedom_formatter, "~> 1.0", only: [:dev, :test]},
+      {:mock, "~> 0.3.0", only: :test},
+      {:freedom_formatter, "~> 1.0", only: :dev},
       {:exconstructor, "~> 1.0"},
       {:ex_doc, "~> 0.10.0", only: :dev},
       {:dialyxir, "~> 0.3", only: :dev},
