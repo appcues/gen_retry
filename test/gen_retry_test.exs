@@ -9,4 +9,3 @@ defmodule GenRetryTest do
     end
   end
 end
-

@@ -3,7 +3,7 @@ defmodule GenRetry.Launcher do
 
   use GenServer
 
-  @type launch :: {:launch, fun, GenRetry.options}
+  @type launch :: {:launch, fun, GenRetry.options()}
   @type state :: %GenRetry.Launcher.State{}
 
   defmodule State do
@@ -11,7 +11,7 @@ defmodule GenRetry.Launcher do
     defstruct launches: 0
   end
 
-  @spec launch(fun, GenRetry.options) :: pid
+  @spec launch(fun, GenRetry.options()) :: pid
   def launch(fun, opts) do
     GenServer.call(:gen_retry_launcher, {:launch, fun, opts})
   end
@@ -28,7 +28,6 @@ defmodule GenRetry.Launcher do
   @spec handle_call(launch, any, state) :: {:reply, pid, state}
   def handle_call({:launch, fun, opts}, _from, state) do
     pid = GenRetry.retry_link(fun, opts)
-    {:reply, pid, %{state | launches: state.launches+1}}
+    {:reply, pid, %{state | launches: state.launches + 1}}
   end
 end
-
