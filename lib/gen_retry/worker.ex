@@ -33,8 +33,6 @@ defmodule GenRetry.Worker do
       {:stop, :normal, state}
     rescue
       e ->
-        trace = System.stacktrace()
-
         state.logger.log(inspect(e))
 
         if should_try_again(state) do
@@ -43,7 +41,7 @@ defmodule GenRetry.Worker do
           {:noreply, %{state | retry_at: retry_at}}
         else
           if pid = state.opts.respond_to do
-            send(pid, {:failure, e, trace, state})
+            send(pid, {:failure, e, __STACKTRACE__, state})
           end
 
           {:stop, :normal, state}
