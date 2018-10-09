@@ -5,19 +5,23 @@ defmodule GenRetry.WorkerTest do
 
   context "logger" do
     it "logs errors as they happen before retrying" do
-      with_mock GenRetry.Utils, log: fn _ -> nil end do
-        task =
-          GenRetry.Task.async(fn ->
-            raise("An Error!")
-          end)
-
+      with_mock GenRetry.TestLogger, log: fn _ -> nil end do
         try do
-          Task.await(task)
+          task =
+            GenRetry.Task.async(fn ->
+              raise("An Error!")
+            end)
+
+          :timer.sleep(100)
+
+          GenRetry.Task.await(task)
         rescue
-          RuntimeError -> "squelch error"
+          _ -> "squelch error"
         end
 
-        assert_called(GenRetry.Utils.log())
+        assert_called(
+          GenRetry.TestLogger.log("%RuntimeError{message: \"An Error!\"}")
+        )
       end
     end
   end

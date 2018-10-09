@@ -9,8 +9,8 @@ defmodule GenRetry.Worker do
   @spec init({GenRetry.retryable_fun(), GenRetry.Options.t()}) ::
           {:ok, GenRetry.State.t()}
   def init({fun, opts}) do
-    config = Application.get_env(:gen_retry, __MODULE__, [])
-    logger = Keyword.get(config, :default_logger, @default_logger)
+    config = Application.get_env(:gen_retry, GenRetry.Logger, [])
+    logger = Keyword.get(config, :logger, @default_logger)
     GenServer.cast(self(), :try)
     {:ok, %State{function: fun, opts: opts, logger: logger}}
   end
