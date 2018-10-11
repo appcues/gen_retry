@@ -3,6 +3,7 @@ defmodule GenRetry.Utils do
 
   @behaviour GenRetry.Logger
 
+  @impl true
   def log(message) do
     Logger.error(message)
   end
