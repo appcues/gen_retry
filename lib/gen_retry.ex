@@ -45,6 +45,12 @@ defmodule GenRetry do
             [applications: [:gen_retry]]
           end
 
+  3. (Optional) Specify a custom logging module in your config.exs
+
+          config :gen_retry, GenRetry.Logger, logger: MyApp.CustomLogger
+
+      where MyApp.CustomLogger implements the GenRetry.Logger behavior.
+      The default module is GenRetry.Utils if none is specified in a config.
 
   ## Options
 
