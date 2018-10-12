@@ -1,5 +1,6 @@
 defmodule GenRetry.Worker do
   @moduledoc false
+  @default_logger GenRetry.Utils
 
   alias GenRetry.State
 
@@ -8,8 +9,10 @@ defmodule GenRetry.Worker do
   @spec init({GenRetry.retryable_fun(), GenRetry.Options.t()}) ::
           {:ok, GenRetry.State.t()}
   def init({fun, opts}) do
+    config = Application.get_env(:gen_retry, GenRetry.Logger, [])
+    logger = Keyword.get(config, :logger, @default_logger)
     GenServer.cast(self(), :try)
-    {:ok, %State{function: fun, opts: opts}}
+    {:ok, %State{function: fun, opts: opts, logger: logger}}
   end
 
   @spec handle_cast(:try, GenRetry.State.t()) ::
@@ -31,6 +34,8 @@ defmodule GenRetry.Worker do
     rescue
       e ->
         trace = System.stacktrace()
+
+        state.logger.log(inspect(e))
 
         if should_try_again(state) do
           retry_at = :erlang.system_time(:milli_seconds) + delay_time(state)

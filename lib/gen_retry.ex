@@ -45,6 +45,12 @@ defmodule GenRetry do
             [applications: [:gen_retry]]
           end
 
+  3. (Optional) Specify a custom logging module in your config.exs
+
+          config :gen_retry, GenRetry.Logger, logger: MyApp.CustomLogger
+
+      where MyApp.CustomLogger implements the GenRetry.Logger behavior.
+      The default module is GenRetry.Utils if none is specified in a config.
 
   ## Options
 
@@ -108,7 +114,9 @@ defmodule GenRetry do
               # number of tries performed so far
               tries: 0,
               # :erlang.system_time(:milli_seconds)
-              retry_at: 0
+              retry_at: 0,
+              # a function for logging
+              logger: nil
 
     @type t :: %__MODULE__{
             function: GenRetry.retryable_fun(),
