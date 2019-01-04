@@ -30,6 +30,10 @@ defmodule GenRetry.Worker do
         send(pid, {:success, return_value, state})
       end
 
+      if on_success = state.opts.on_success do
+        on_success.({return_value, state})
+      end
+
       {:stop, :normal, state}
     rescue
       e ->
@@ -42,6 +46,10 @@ defmodule GenRetry.Worker do
         else
           if pid = state.opts.respond_to do
             send(pid, {:failure, e, __STACKTRACE__, state})
+          end
+
+          if on_failure = state.opts.on_failure do
+            on_failure.({e, __STACKTRACE__, state})
           end
 
           {:stop, :normal, state}
