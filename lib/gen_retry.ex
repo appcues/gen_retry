@@ -78,6 +78,13 @@ defmodule GenRetry do
     The process ID to which a message should be sent upon completion.
     Successful exits send `{:success, return_value, final_retry_state}`;
     unsuccessful exits send `{:failure, error, stacktrace, final_retry_state}`.
+
+  * `:on_success`, `fn {result, final_retry_state} -> nil end` (default no-op):
+    A function to run on success. The argument is a tuple containing the result and the final retry state.
+
+  * `:on_failure`, `fn {exception, stacktrace, final_retry_state} -> nil end` (default no-op):
+    A function to run on failure. The argument is a tuple containing the exception, stacktrace, and final retry state.
+
   """
 
   use Application
@@ -132,7 +139,9 @@ defmodule GenRetry do
               delay: 1000,
               jitter: 0,
               exp_base: 2,
-              respond_to: nil
+              respond_to: nil,
+              on_success: nil,
+              on_failure: nil
 
     @type t :: %__MODULE__{
             retries: :infinity | non_neg_integer,
@@ -140,6 +149,8 @@ defmodule GenRetry do
             jitter: number,
             exp_base: number,
             respond_to: pid | nil,
+            on_success: GenRetry.on_success(),
+            on_failure: GenRetry.on_failure(),
           }
 
     use ExConstructor
@@ -151,6 +162,8 @@ defmodule GenRetry do
           | {:jitter, number}
           | {:exp_base, number}
           | {:respond_to, pid}
+          | {:on_success, on_success()}
+          | {:on_failure, on_failure()}
 
   @type options :: [option]
 
@@ -160,6 +173,14 @@ defmodule GenRetry do
 
   @type failure_msg ::
           {:failure, Exception.t(), [:erlang.stack_item()], GenRetry.State.t()}
+
+  @type on_success ::
+          ({result :: any(), final_retry_state :: GenRetry.State.t()} -> any())
+
+  @type on_failure ::
+          ({exception :: any(), stacktrace :: list(),
+            final_retry_state :: GenRetry.State.t()} ->
+             any())
 
   @doc ~S"""
   Starts a retryable process linked to `GenRetry.Supervisor`, and returns its
