@@ -32,10 +32,15 @@ my_val = Task.await(t)  # may raise exception
 Hexdocs.pm.](http://hexdocs.pm/gen_retry/GenRetry.html)
 
 
+## Changelog and Contributors
+
+[CHANGELOG.md](CHANGELOG.md) is a record of contributions and
+releases.  Thanks so much to everyone who's submitted patches!
+
+
 ## Authorship and License
 
-GenRetry is copyright 2016 Appcues, Inc.
+GenRetry is copyright 2016-2019 Appcues, Inc.
 
-GenRetry is released under the
-[MIT License](https://github.com/appcues/gen_retry/blob/master/LICENSE.txt).
+GenRetry is released under the [MIT License](LICENSE.txt).
 
