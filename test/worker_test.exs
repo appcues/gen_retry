@@ -1,11 +1,16 @@
 defmodule GenRetry.WorkerTest do
-  use ExSpec, async: true
+  # Mocks cannot be done asynchronously without leaking to other test cases.
+  use ExSpec, async: false
 
   import Mock
 
   context "logger" do
     it "logs errors as they happen before retrying" do
-      with_mock GenRetry.TestLogger, log: fn _ -> nil end do
+      test_log = fn message ->
+        assert message =~ "(RuntimeError) An Error!"
+      end
+
+      with_mock GenRetry.TestLogger, log: test_log do
         try do
           task =
             GenRetry.Task.async(fn ->
@@ -19,9 +24,7 @@ defmodule GenRetry.WorkerTest do
           _ -> "squelch error"
         end
 
-        assert_called(
-          GenRetry.TestLogger.log("%RuntimeError{message: \"An Error!\"}")
-        )
+        assert_called(GenRetry.TestLogger.log(:_))
       end
     end
   end
