@@ -29,9 +29,13 @@ defmodule GenRetry.Task do
     `opts` are GenRetry options.
     The `:respond_to` option is tolerated, but ignored.
     """
-    @spec async(pid, GenRetry.retryable_fun(), GenRetry.options()) :: %Task{}
-    def async(pid, fun, opts \\ []) do
-      Task.Supervisor.async(pid, GenRetry.Task.task_function(fun, opts))
+    @spec async(
+            Supervisor.supervisor(),
+            GenRetry.retryable_fun(),
+            GenRetry.options()
+          ) :: %Task{}
+    def async(supervisor, fun, opts \\ []) do
+      Task.Supervisor.async(supervisor, GenRetry.Task.task_function(fun, opts))
     end
 
     @doc ~S"""
@@ -41,10 +45,16 @@ defmodule GenRetry.Task do
     `opts` are GenRetry options.
     The `:respond_to` option is tolerated, but ignored.
     """
-    @spec async_nolink(pid, GenRetry.retryable_fun(), GenRetry.options()) ::
-            %Task{}
-    def async_nolink(pid, fun, opts \\ []) do
-      Task.Supervisor.async_nolink(pid, GenRetry.Task.task_function(fun, opts))
+    @spec async_nolink(
+            Supervisor.supervisor(),
+            GenRetry.retryable_fun(),
+            GenRetry.options()
+          ) :: %Task{}
+    def async_nolink(supervisor, fun, opts \\ []) do
+      Task.Supervisor.async_nolink(
+        supervisor,
+        GenRetry.Task.task_function(fun, opts)
+      )
     end
   end
 
