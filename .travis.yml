@@ -2,12 +2,14 @@ language: elixir
 elixir:
   - 1.8
   - 1.9
+  - 1.10
 env:
   MIX_ENV: test
 otp_release:
   - '21.0'
+before_script:
+  - if [[ "$TRAVIS_ELIXIR_VERSION" =~ "1.9" ]]; then mix fformat --check-formatted; fi
 script:
-  - mix fformat --check-formatted
   - mix test
 cache:
   directories:

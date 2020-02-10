@@ -30,7 +30,7 @@ defmodule GenRetry.Task do
     The `:respond_to` option is tolerated, but ignored.
     """
     @spec async(
-            Supervisor.supervisor(),
+            Elxir.Supervisor.supervisor(),
             GenRetry.retryable_fun(),
             GenRetry.options()
           ) :: %Task{}
@@ -46,7 +46,7 @@ defmodule GenRetry.Task do
     The `:respond_to` option is tolerated, but ignored.
     """
     @spec async_nolink(
-            Supervisor.supervisor(),
+            Elxir.Supervisor.supervisor(),
             GenRetry.retryable_fun(),
             GenRetry.options()
           ) :: %Task{}

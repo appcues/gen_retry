@@ -16,7 +16,7 @@ defmodule GenRetry.WorkerTest do
 
           GenRetry.Task.await(task)
         rescue
-          _ -> "squelch error"
+          _e in UndefinedFunctionError -> "squelch error"
         end
 
         assert_called(
