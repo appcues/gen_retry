@@ -1,11 +1,10 @@
 # GenRetry
 
-[![Build Status](https://travis-ci.com/appcues/gen_retry.svg?branch=master)](https://travis-ci.com/appcues/gen_retry)
+[![Build Status](https://circleci.com/gh/appcues/gen_retry.svg?style=svg)](https://circleci.com/gh/appcues/gen_retry)
 [![Hex.pm Version](http://img.shields.io/hexpm/v/gen_retry.svg?style=flat)](https://hex.pm/packages/gen_retry)
 
 GenRetry provides utilities for retrying Elixir functions,
 with configurable delay and backoff characteristics.
-
 
 ## Examples
 
@@ -25,22 +24,18 @@ t = GenRetry.Task.async(my_future_function, retries: 3)
 my_val = Task.await(t)  # may raise exception
 ```
 
-
 ## [Full Documentation](http://hexdocs.pm/gen_retry/GenRetry.html)
 
 [Full gen_retry documentation is available on
 Hexdocs.pm.](http://hexdocs.pm/gen_retry/GenRetry.html)
 
-
 ## Changelog and Contributors
 
 [CHANGELOG.md](CHANGELOG.md) is a record of contributions and
-releases.  Thanks so much to everyone who's submitted patches!
-
+releases. Thanks so much to everyone who's submitted patches!
 
 ## Authorship and License
 
 GenRetry is copyright 2016-2019 Appcues, Inc.
 
 GenRetry is released under the [MIT License](LICENSE.txt).
-
