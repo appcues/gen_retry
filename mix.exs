@@ -6,7 +6,7 @@ defmodule GenRetry.Mixfile do
       app: :gen_retry,
       description: description(),
       package: package(),
-      version: "1.3.0",
+      version: "1.4.0",
       elixir: "~> 1.7",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -43,11 +43,10 @@ defmodule GenRetry.Mixfile do
   defp deps do
     [
       {:mock, "~> 0.3.0", only: :test},
-      {:freedom_formatter, "~> 1.0", only: [:dev, :test]},
       {:exconstructor, "~> 1.0"},
-      {:ex_doc, "~> 0.25.5", only: :dev},
+      {:ex_doc, "~> 0.26.0", only: :dev},
       {:dialyxir, "~> 1.1", only: :dev},
-      {:earmark, "> 0.0.0", only: :dev},
+      {:earmark, "~> 1.4", only: :dev},
       {:ex_spec, "~> 2.0.0", only: :test},
       {:excoveralls, "~> 0.5", only: :test}
     ]
