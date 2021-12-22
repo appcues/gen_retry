@@ -94,7 +94,7 @@ defmodule GenRetry do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(GenRetry.Launcher, [[], [name: :gen_retry_launcher]]),
+      worker(GenRetry.Launcher, [[], [name: :gen_retry_launcher]])
     ]
 
     opts = [strategy: :one_for_one, name: GenRetry.Supervisor]
@@ -129,7 +129,7 @@ defmodule GenRetry do
             function: GenRetry.retryable_fun(),
             opts: GenRetry.Options.t(),
             tries: non_neg_integer,
-            retry_at: non_neg_integer,
+            retry_at: non_neg_integer
           }
   end
 
@@ -150,7 +150,7 @@ defmodule GenRetry do
             exp_base: number,
             respond_to: pid | nil,
             on_success: GenRetry.on_success(),
-            on_failure: GenRetry.on_failure(),
+            on_failure: GenRetry.on_failure()
           }
 
     use ExConstructor
