@@ -7,16 +7,12 @@ defmodule GenRetry.WorkerTest do
     it "logs errors as they happen before retrying" do
       with_mock GenRetry.TestLogger, log: fn _ -> nil end do
         try do
-          task =
-            GenRetry.Task.async(fn ->
-              raise("An Error!")
-            end)
+          task = GenRetry.Task.async(fn -> raise "An Error!" end)
+          :erlang.unlink(task.pid)
 
-          :timer.sleep(100)
-
-          GenRetry.Task.await(task)
-        rescue
-          _ -> "squelch error"
+          Task.await(task)
+        catch
+          :exit, _ -> "squelch error"
         end
 
         assert_called(

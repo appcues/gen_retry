@@ -94,7 +94,13 @@ defmodule GenRetry do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(GenRetry.Launcher, [[], [name: :gen_retry_launcher]])
+      %{
+        id: GenRetry.Launcher,
+        start:
+          {GenRetry.Launcher, :start_link, [[], [name: :gen_retry_launcher]]},
+        type: :worker,
+        restart: :permanent
+      }
     ]
 
     opts = [strategy: :one_for_one, name: GenRetry.Supervisor]
