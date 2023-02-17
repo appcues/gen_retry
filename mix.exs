@@ -44,7 +44,7 @@ defmodule GenRetry.Mixfile do
     [
       {:mock, "~> 0.3.0", only: :test},
       {:exconstructor, "~> 1.0"},
-      {:ex_doc, "~> 0.26.0", only: :dev},
+      {:ex_doc, "~> 0.29.0", only: :dev},
       {:dialyxir, "~> 1.1", only: :dev},
       {:earmark, "~> 1.4", only: :dev},
       {:ex_spec, "~> 2.0.0", only: :test},
