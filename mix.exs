@@ -48,7 +48,7 @@ defmodule GenRetry.Mixfile do
       {:dialyxir, "~> 1.1", only: :dev},
       {:earmark, "~> 1.4", only: :dev},
       {:ex_spec, "~> 2.0.0", only: :test},
-      {:excoveralls, "~> 0.5", only: :test}
+      {:excoveralls, "~> 0.16", only: :test}
     ]
   end
 end
